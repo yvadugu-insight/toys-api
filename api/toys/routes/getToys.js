@@ -1,17 +1,17 @@
 'use strict';
 
-const Instructor = require('../model/Instructor');
+const Toy = require('../model/Toy');
 const Boom = require('boom');
 
 module.exports = {
   method: 'GET',
-  path: '/api/instructors',
+  path: '/api/toys',
   config: {
     auth: {
       strategy: 'jwt'
     },
     handler: (req, res) => {
-      Instructor
+      Toy
         .find()
         // Deselect the password and version fields
         .select('-__v')
@@ -20,7 +20,7 @@ module.exports = {
             throw Boom.badRequest(err);
           }
           if (!data.length) {
-            throw Boom.notFound('No instructors found!');
+            throw Boom.notFound('No Toys found!');
           }
 
           res(data);

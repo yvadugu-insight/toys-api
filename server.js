@@ -17,13 +17,13 @@ server.connection({ port: 3001, routes: { cors: true } });
 const dbUrl = `mongodb://${process.env.MLAB_USER}:${process.env.MLAB_PASSWORD}@${process.env.MLAB_DOMAIN}/${process.env.MLAB_DB}`;
 
 server.register(require('hapi-auth-jwt'), (err) => {
-  
+
   // We are giving the strategy a name of 'jwt'
   server.auth.strategy('jwt', 'jwt', 'required', {
     key: process.env.SECRET_KEY,
     verifyOptions: { algorithms: ['HS256'] }
   });
-  
+
   // Look through the routes in
   // all the subdirectories of API
   // and create a new route for each
@@ -41,7 +41,7 @@ server.start((err) => {
     throw err;
   }
   // Once started, connect to Mongo through Mongoose
-  mongoose.connect(dbUrl, {}, (err) => {
+  mongoose.connect(dbUrl, { useMongoClient: true }, (err) => {
     if (err) {
       throw err;
     }

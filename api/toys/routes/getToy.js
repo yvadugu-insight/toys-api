@@ -1,28 +1,30 @@
 'use strict';
 
-const Instructor = require('../model/Instructor');
+const Toy = require('../model/Toy');
 const Boom = require('boom');
 
 module.exports = {
   method: 'GET',
-  path: '/api/instructors',
+  path: '/api/toys/{id}',
   config: {
     auth: {
       strategy: 'jwt'
     },
     handler: (req, res) => {
-      Instructor
-        .find()
+
+      const _id = req.params.id;
+
+      Toy
+        .findOne({ _id })
         // Deselect the password and version fields
         .select('-__v')
         .exec((err, data) => {
           if (err) {
-            throw Boom.badRequest(err);
+            res(Boom.badRequest(err));
           }
-          if (!data.length) {
-            throw Boom.notFound('No instructors found!');
+          if (!data) {
+            res(Boom.notFound('Toy not found!'));
           }
-
           res(data);
         });
     }

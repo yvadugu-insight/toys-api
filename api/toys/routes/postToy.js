@@ -1,33 +1,30 @@
 'use strict';
 
 const Boom = require('boom');
-const Instructor = require('../model/Instructor');
-const postInstructorSchema = require('../schemas/postInstructor');
+const Toy = require('../model/Toy');
+const postToySchema = require('../schemas/postToy');
 
 module.exports = {
   method: 'POST',
-  path: '/api/instructors',
+  path: '/api/toys',
   config: {
     auth: {
       strategy: 'jwt',
     },
     handler: (req, res) => {
-
-      let instructor = new Instructor(req.payload);
-
-      instructor.save((err, data) => {
+      let toy = new Toy(req.payload);
+      toy.save((err, data) => {
         if (err) {
           res(Boom.badRequest(err));
           return;
         }
-
-        res({ message: 'Instructor created!', data }).code(201);
+        res({ message: 'Toy created!', data }).code(201);
       });
 
     },
     // Validate the payload against the Joi schema
     validate: {
-      payload: postInstructorSchema
+      payload: postToySchema
     }
   }
 }
