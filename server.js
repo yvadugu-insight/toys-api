@@ -4,6 +4,7 @@ require('dotenv').config();
 const Hapi = require('hapi');
 const Boom = require('boom');
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 const glob = require('glob');
 const path = require('path');
 

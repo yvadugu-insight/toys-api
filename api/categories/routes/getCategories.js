@@ -22,7 +22,6 @@ module.exports = {
           if (!data.length) {
             throw Boom.notFound('No categories found!');
           }
-
           res(data);
         });
     }

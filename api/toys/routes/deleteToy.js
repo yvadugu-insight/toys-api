@@ -1,6 +1,7 @@
 const Boom = require('boom');
 const deleteToySchema = require('../schemas/deleteToy');
 const Toy = require('../model/Toy');
+const getUserFromToken = require('../../../util/userFunctions').getUserFromToken;
 
 module.exports = {
   method: 'DELETE',
@@ -9,13 +10,16 @@ module.exports = {
     auth: {
       strategy: 'jwt',
     },
+    pre:[
+      {method: getUserFromToken, assign: 'user'}
+    ],
     //need to work on strategy so that owner only can delete toy
     handler: (req, res) => {
 
       const _id = req.params.id;
-
+      const user = req.pre.user;
       Toy
-        .findOneAndRemove({ _id })
+        .findOneAndRemove({ _id, owner:user._id })
         .exec((err, data) => {
           if (err) {
             throw Boom.badRequest(err);
@@ -24,10 +28,8 @@ module.exports = {
           if (!data) {
             throw Boom.notFound('Toy not found!');
           }
-
           res({ message: 'Toy deleted!' });
         });
-
     },
     // Validate the payload against the Joi schema
     validate: {

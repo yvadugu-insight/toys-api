@@ -5,7 +5,7 @@ const Boom = require('boom');
 const User = require('../model/User');
 const postUserSchema = require('../schemas/postUser');
 const verifyUniqueUser = require('../../../util/userFunctions').verifyUniqueUser;
-const createToken = require('../../../util/token');
+const createToken = require('../../../util/token').createToken;
 
 function hashPassword(password, cb) {
   // Generate a salt at level 10 strength

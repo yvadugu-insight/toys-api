@@ -14,19 +14,25 @@ module.exports = {
 
       const _id = req.params.id;
 
-      Toy
+      var toy = Toy
         .findOne({ _id })
-        // Deselect the password and version fields
+        .populate({
+          path: 'owner',
+          select: '-password -__v',
+        })
+        .populate('categories')
         .select('-__v')
-        .exec((err, data) => {
-          if (err) {
+        .exec();
+        toy
+          .then((data) => {
+              if (!data) {
+                res(Boom.notFound('Toy not found!'));
+              }
+              res(data);
+          })
+          .catch((err)=>{
             res(Boom.badRequest(err));
-          }
-          if (!data) {
-            res(Boom.notFound('Toy not found!'));
-          }
-          res(data);
-        });
+          })
     }
   }
 }

@@ -4,7 +4,7 @@ const Boom = require('boom');
 const User = require('../../users/model/User');
 const postUserSchema = require('../schemas/postUser');
 const verifyCredentials = require('../../../util/userFunctions').verifyCredentials;
-const createToken = require('../../../util/token');
+const createToken = require('../../../util/token').createToken;
 
 module.exports = {
   method: 'POST',

@@ -3,6 +3,7 @@
 const Boom = require('boom');
 const User = require('../api/users/model/User');
 const bcrypt = require('bcrypt');
+const getTokenPayLoad = require('./token').getTokenPayLoad;
 
 function verifyUniqueUser(req, res) {
   // Find an entry from the database that
@@ -58,7 +59,23 @@ function verifyCredentials(req, res) {
   });
 }
 
+function getUserFromToken(req, res){
+    const payload = getTokenPayLoad(req);
+    const { email } = payload;
+
+    User.findOne({ email })
+        .select('-password -__v')
+        .exec((err, data) => {
+        if (data) {
+            res(data);
+        } else {
+            res(Boom.badRequest('Incorrect user email!'));
+        }
+    });
+}
+
 module.exports = {
   verifyUniqueUser: verifyUniqueUser,
-  verifyCredentials: verifyCredentials
+  verifyCredentials: verifyCredentials,
+  getUserFromToken: getUserFromToken
 }

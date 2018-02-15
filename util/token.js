@@ -2,6 +2,7 @@
 
 const secret = process.env.SECRET_KEY;
 const jwt = require('jsonwebtoken');
+const Boom = require('boom');
 const createGravatarUrl = require('./createGravatar');
 
 function createToken(user) {
@@ -30,5 +31,29 @@ function createToken(user) {
     }
   );
 }
+function getToken(req){
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+        return req.headers.authorization.split(' ')[1];
+    } else if (req.query && req.query.token) {
+        return req.query.token;
+    }
+    return null;
+}
+function getTokenPayLoad(req){
+    const jwtToken = getToken(req);
+    if(jwtToken){
+        try {
+            return jwt.verify(jwtToken, secret);
+        } catch (e) {
+            return null;
+        }
+    } else {
+        return null;
+    }
+}
 
-module.exports = createToken;
+module.exports = {
+    createToken:createToken,
+    getToken:getToken,
+    getTokenPayLoad:getTokenPayLoad,
+};
