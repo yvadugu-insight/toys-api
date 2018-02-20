@@ -3,6 +3,8 @@
 const ToyRequest = require('../model/ToyRequest');
 const Toy = require('../../toys/model/Toy')
 const Boom = require('boom');
+const sendMessageToUser = require('../../../util/pushNotifications').sendMessageToUser;
+
 
 module.exports = {
   method: 'GET',
@@ -21,8 +23,9 @@ module.exports = {
                 res(Boom.notFound('Request not found!'));
             } else {
                 // update request
-                res({ message:'Request approved!', data:request })
-                // @todo send notification to borrower
+                res({ message:'Request rejected!', data:request })
+                // send notification to borrower
+                sendMessageToUser({ user: request.borrower, message: 'Request rejected!' });
             }
         });
     }
